@@ -1,9 +1,16 @@
-import javax.sound.sampled.UnsupportedAudioFileException;
+package com.company;
+
 import java.io.IOException;
 import java.util.Scanner;
 
 public class Menu {
-    private final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
+    private final com.company.FileOperation fileOperation;
+
+    public Menu() {
+        this.scanner = new Scanner(System.in);
+        this.fileOperation = new com.company.FileOperationImpl();
+    }
 
     public int showMenu() {
         int select;
@@ -22,28 +29,30 @@ public class Menu {
         return select;
     }
 
-    public void runMenu() throws UnsupportedAudioFileException, IOException {
+    public void runMenu() throws IOException {
 
         int select = showMenu();
 
         switch (select) {
             case 1 -> {
-                FileOperation.createFile();
+                fileOperation.createFile();
                 runMenu();
             }
             case 2 -> {
-                FileOperation.updateFile();
+                fileOperation.updateFile();
                 runMenu();
             }
             case 3 -> {
-                FileOperation.dropFile();
+                fileOperation.dropFile();
                 runMenu();
             }
             case 4 -> {
-                FileOperation.removeTextFromFile();
+                fileOperation.removeTextFromFile();
                 runMenu();
             }
-            case 5 -> System.exit(0);
+            case 5 -> {
+                System.exit(0);
+            }
 
         }
 

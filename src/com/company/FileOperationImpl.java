@@ -1,20 +1,22 @@
-import java.io.*;
+package com.company;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-public class FileOperation {
-    private static final Scanner scanner = new Scanner(System.in);
-    private static final String filesPath = "files/";
+public class FileOperationImpl extends com.company.FileOperation {
 
-    private static String currentTimeString() {
-        return LocalTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+    public FileOperationImpl() {
+        scanner = new Scanner(System.in);
+        filesPath = "/Users/stetsenko.v.n/FileManagerTask/files/";
     }
 
-    public static void createFile() throws IOException {
+    @Override
+    public void createFile() throws IOException {
         File newFile = new File(filesPath.concat(currentTimeString().concat(".txt")));
         System.out.print("Write your text: \n");
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(newFile.toPath())) {
@@ -27,7 +29,8 @@ public class FileOperation {
         }
     }
 
-    public static void updateFile() throws IOException {
+    @Override
+    public void updateFile() throws IOException {
         System.out.print("Enter file name (HH:mm:ss): ");
         File newFile = new File(filesPath.concat(scanner.nextLine().concat(".txt")));
         exists(newFile);
@@ -43,7 +46,8 @@ public class FileOperation {
         }
     }
 
-    public static void dropFile() throws FileNotFoundException {
+    @Override
+    public void dropFile() throws IOException {
         System.out.print("Enter file name (HH:mm:ss): ");
         File newFile = new File(filesPath.concat(scanner.nextLine().concat(".txt")));
         if (newFile.delete()) {
@@ -53,10 +57,11 @@ public class FileOperation {
         }
     }
 
-    public static void removeTextFromFile() throws IOException {
+    @Override
+    public void removeTextFromFile() throws IOException {
         System.out.print("Enter file name (HH:mm:ss): ");
-        String fileName = scanner.nextLine().concat(".txt");
-        File newFile = new File(filesPath.concat(fileName));
+        String fileName = filesPath.concat(scanner.nextLine().concat(".txt"));
+        File newFile = new File(fileName);
         exists(newFile);
         String text = Files.readString(Path.of(fileName));
         System.out.println("Write text to delete: ");
@@ -66,11 +71,5 @@ public class FileOperation {
             text = text.replace(inputLine, "");
         }
         Files.writeString(Path.of(fileName), text);
-    }
-
-    public static void exists(File file) throws FileNotFoundException {
-        if (!file.exists()) {
-            throw new FileNotFoundException(file.getName());
-        }
     }
 }
